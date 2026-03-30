@@ -1,0 +1,178 @@
+🎨 Theme Properties (Set BEFORE creating windows)
+Library.MainColor = Color3.fromRGB(28, 28, 28)       -- Panel background
+Library.BackgroundColor = Color3.fromRGB(20, 20, 20) -- Groupbox background
+Library.AccentColor = Color3.fromRGB(0, 85, 255)     -- Highlights/buttons
+Library.OutlineColor = Color3.fromRGB(50, 50, 50)    -- Borders
+Library.FontColor = Color3.fromRGB(255, 255, 255)    -- Text
+Library.Font = Enum.Font.Code                        -- UI Font
+🪟 Window & Tab API
+local Window = Library:CreateWindow({
+    Title = "Menu Title",
+    Center = true,              -- Spawn centered
+    AutoShow = true,            -- Show on create
+    Size = UDim2.fromOffset(550, 600),
+    Position = UDim2.fromOffset(100, 100), -- If not centered
+})
+
+local Tab = Window:AddTab("Tab Name")  -- Returns tab object
+Tab Organization Methods
+Tab:AddLeftGroupbox("Name")    -- Left column container
+Tab:AddRightGroupbox("Name")   -- Right column container
+Tab:AddLeftTabbox("Name")      -- Nested tabs (left)
+Tab:AddRightTabbox("Name")     -- Nested tabs (right)
+🎛️ UI Elements Reference
+Toggle
+Groupbox:AddToggle("UniqueID", {
+    Text = "Display Text",
+    Default = false,
+    Tooltip = "Hover info",
+    Risky = false,
+    Callback = function(Value: boolean)
+    end,
+})
+
+Methods:
+
+.SetValue(bool)
+.OnChanged(func)
+.AddColorPicker()
+.AddKeyPicker()
+Slider
+Groupbox:AddSlider("UniqueID", {
+    Text = "Slider Label",
+    Default = 50,
+    Min = 0,
+    Max = 100,
+    Rounding = 0,
+    Suffix = "%",
+    Compact = false,
+    Callback = function(Value: number)
+    end,
+})
+
+Methods:
+
+.SetValue(num)
+.OnChanged(func)
+Dropdown
+Groupbox:AddDropdown("UniqueID", {
+    Text = "Dropdown Label",
+    Values = {"Option1", "Option2"},
+    Default = "Option1",
+    Multi = false,
+    AllowNull = true,
+    SpecialType = "Player", -- "Player" or "Team"
+    Callback = function(Value: string|table)
+    end,
+})
+
+Methods:
+
+.SetValue(val)
+.SetValues(newList)
+.OnChanged(func)
+ColorPicker
+Groupbox:AddColorPicker("UniqueID", {
+    Title = "Picker Label",
+    Default = Color3.fromRGB(255, 0, 0),
+    Transparency = 0,
+    Callback = function(Color: Color3)
+    end,
+})
+
+Methods:
+
+.SetValueRGB(Color3)
+.SetValue({H,S,V}, alpha)
+.OnChanged(func)
+KeyPicker
+Groupbox:AddKeyPicker("UniqueID", {
+    Default = "E",
+    Mode = "Toggle", -- "Always", "Toggle", "Hold"
+    Text = "Keybind Label",
+    NoUI = false,
+    SyncToggleState = false,
+    Callback = function(Toggled: boolean)
+    end,
+    ChangedCallback = function(Key)
+    end,
+})
+
+Methods:
+
+.SetValue({Key, Mode})
+.OnClick(func)
+.OnChanged(func)
+Button
+Groupbox:AddButton({
+    Text = "Button Text",
+    Func = function()
+    end,
+    DoubleClick = false,
+    Tooltip = "Info on hover",
+})
+:AddTooltip("Extra tooltip")
+:AddButton({
+    Text = "Secondary",
+    Func = function() end,
+})
+Input (TextBox)
+Groupbox:AddInput("UniqueID", {
+    Text = "Input Label",
+    Default = "Starting text",
+    Placeholder = "Type here...",
+    Numeric = false,
+    Finished = false,
+    MaxLength = 100,
+    Tooltip = "Help text",
+    Callback = function(Value: string)
+    end,
+})
+
+Methods:
+
+.SetValue(str)
+.OnChanged(func)
+🧩 Label & Utilities
+-- Label
+local Label = Groupbox:AddLabel("Text", DoesWrap?)
+Label:SetText("New text")
+Label:AddColorPicker(...)
+
+-- Divider
+Groupbox:AddDivider()
+
+-- Spacer
+Groupbox:AddBlank(Pixels)
+Dependency Box (Conditional UI)
+local DepBox = Groupbox:AddDependencyBox()
+
+DepBox:SetupDependencies({
+    {Toggles.Aimbot, true},
+})
+
+-- Add elements to:
+DepBox.Container
+
+DepBox:Resize()
+🌐 Global Tables (Auto-Populated)
+getgenv().Toggles   -- Toggles.Aimbot.Value
+getgenv().Options   -- Options.AimbotFOV.Value
+getgenv().Library   -- Main library instance
+🎨 Advanced Features
+Rainbow Accent
+Library.CurrentRainbowHue   -- 0-1
+Library.CurrentRainbowColor -- Color3
+Color Registry System
+Library:AddToRegistry(Instance, {
+    BackgroundColor3 = "AccentColor",
+    TextColor3 = function()
+        return Library.CurrentRainbowColor
+    end,
+})
+🖱️ Utilities
+Dragging
+Library:MakeDraggable(Frame, CutoffY?)
+Mouse Utilities
+Library:IsMouseOverFrame(Frame)
+Library:MouseIsOverOpenedFrame()
